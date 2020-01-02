@@ -187,7 +187,7 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
         this.domain = domain;
         this.range = range;
         this.timePeriodClass = null;
-        this.data = new java.util.ArrayList();
+        this.data = new java.util.LinkedList();
         this.maximumItemCount = Integer.MAX_VALUE;
         this.maximumItemAge = Long.MAX_VALUE;
         this.minY = Double.NaN;
@@ -1056,18 +1056,24 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
         TimeSeries copy = (TimeSeries) super.clone();
         copy.data = new java.util.ArrayList();
         if (this.data.size() > 0) {
+        	// <= 改为 <
             for (int index = start; index <= end; index++) {
                 TimeSeriesDataItem item
                         = (TimeSeriesDataItem) this.data.get(index);
+                
                 TimeSeriesDataItem clone = (TimeSeriesDataItem) item.clone();
                 try {
-                    copy.add(clone);
+                	// 增加此行
+                	copy.add(item.getPeriod(), item.getValue());
+               
+                    //copy.add(clone);
                 }
                 catch (SeriesException e) {
                     e.printStackTrace();
                 }
             }
         }
+       
         return copy;
     }
 
